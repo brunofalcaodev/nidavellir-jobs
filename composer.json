@@ -1,0 +1,43 @@
+{
+    "name": "brunofalcaodev/nidavellir-jobs",
+    "description": "Nidavellir Jobs",
+    "keywords": [
+        "brunofalcaodev"
+    ],
+    "homepage": "https://github.com/brunofalcaodev/nidavellir-jobs",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Bruno Falcão",
+            "email": "bruno.c.falcao@brunofalcao.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0",
+        "kucoin/kucoin-php-sdk": "~1.1.0",
+        "brunofalcaodev/nidavellir-cube": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nidavellir\\Jobs\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nidavellir\\Jobs\\NidavellirJobsServiceProvider"
+            ]
+        }
+    }
+}
