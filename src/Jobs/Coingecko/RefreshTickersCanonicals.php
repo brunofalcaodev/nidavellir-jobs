@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Nidavellir\Coingecko\CoingeckoCrawler;
+use Nidavellir\Apis\Coingecko;
 use Nidavellir\Cube\Models\Ticker;
 
 class RefreshTickersCanonicals implements ShouldQueue
@@ -31,7 +31,7 @@ class RefreshTickersCanonicals implements ShouldQueue
      */
     public function handle()
     {
-        $data = CoingeckoCrawler::allTickers();
+        $data = Coingecko::allTickers();
 
         foreach ($data->response() as $ticker) {
             Ticker::updateOrCreate(
