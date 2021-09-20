@@ -8,9 +8,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Nidavellir\Apis\Coingecko;
-use Nidavellir\Cube\Models\Ticker;
+use Nidavellir\Cube\Models\Token;
 
-class RefreshTickersCanonicals implements ShouldQueue
+class RefreshTokensSymbols implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class RefreshTickersCanonicals implements ShouldQueue
      */
     public function __construct()
     {
-        $this->onQueue('tickers');
+        $this->onQueue('tokens');
     }
 
     /**
@@ -31,14 +31,14 @@ class RefreshTickersCanonicals implements ShouldQueue
      */
     public function handle()
     {
-        $data = Coingecko::allTickers();
+        $data = Coingecko::allTokens();
 
-        foreach ($data->response() as $ticker) {
-            Ticker::updateOrCreate(
-                ['coingecko_id' => $ticker['id']],
-                ['name'         => $ticker['name'],
-                    'canonical'    => $ticker['symbol'],
-                    'coingecko_id' => $ticker['id'],
+        foreach ($data->response() as $token) {
+            Token::updateOrCreate(
+                ['coingecko_id' => $token['id']],
+                ['name'         => $token['name'],
+                    'canonical'    => $token['symbol'],
+                    'coingecko_id' => $token['id'],
                 ]
             );
         }
