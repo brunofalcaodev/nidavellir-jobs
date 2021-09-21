@@ -1,6 +1,6 @@
 <?php
 
-namespace Nidavellir\Jobs\Jobs\Coingecko;
+namespace Nidavellir\Jobs\Coingecko;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Nidavellir\Apis\Coingecko;
 use Nidavellir\Cube\Models\Token;
 
-class RefreshTokensUrls implements ShouldQueue
+class RefreshTokensSymbols implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,18 +31,15 @@ class RefreshTokensUrls implements ShouldQueue
      */
     public function handle()
     {
-        $tokens = Token::whereNull('image_url')
-                         ->take(250)
-                         ->get();
-
-        $ids = $tokens->pluck('coingecko_id')->join(',');
-
-        $data = Coingecko::allMarkets(['ids' => $ids]);
+        $data = Coingecko::allTokens();
 
         foreach ($data->response() as $token) {
             Token::updateOrCreate(
                 ['coingecko_id' => $token['id']],
-                ['image_url' => $token['image']]
+                ['name'         => $token['name'],
+                    'canonical'    => $token['symbol'],
+                    'coingecko_id' => $token['id'],
+                ]
             );
         }
     }

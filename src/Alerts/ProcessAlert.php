@@ -1,6 +1,6 @@
 <?php
 
-namespace Nidavellir\Jobs\Jobs\Alerts;
+namespace Nidavellir\Jobs\Alerts;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
