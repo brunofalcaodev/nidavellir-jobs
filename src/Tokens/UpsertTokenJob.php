@@ -54,10 +54,12 @@ class UpsertTokenJob implements ShouldQueue
             );
 
             if ($quote) {
-                Pair::updateOrCreate(
-                    ['token_id' => $token->id],
-                    ['quote'    => $quote]
-                );
+                if (!Pair::firstWhere('token_id')) {
+                    Pair::create(
+                        ['token_id' => $token->id],
+                        ['quote'    => $quote]
+                    );
+                }
             }
         });
     }
