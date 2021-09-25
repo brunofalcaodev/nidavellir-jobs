@@ -70,12 +70,12 @@ class UpsertTokenJob implements ShouldQueue
              * what exchange is being used.
              */
             if ($quote) {
-                if (!Pair::where('token_id', $token->id)
+                if (! Pair::where('token_id', $token->id)
                          ->where('quote', $quote)
                          ->first()) {
                     Pair::create(
                         ['token_id' => $token->id,
-                         'quote'    => $quote]
+                            'quote'    => $quote, ]
                     );
                 }
             }

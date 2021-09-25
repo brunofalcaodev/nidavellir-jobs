@@ -5,10 +5,11 @@ namespace Nidavellir\Jobs\Alerts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Nidavellir\Workflows\Pipeline;
-use Nidavellir\Workflows\Pipelines\ProcessAlert\ProcessAlert as ProcessAlertPipeline;
+use Nidavellir\Pipelines\Pipeline;
+use Nidavellir\Pipelines\ProcessAlert\ParseAlert;
 
 class ProcessAlert implements ShouldQueue
 {
@@ -22,10 +23,15 @@ class ProcessAlert implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($headers, $body)
+    public function __construct(Request $request = null, array $headers = null, string $body = null)
     {
-        $this->headers = $headers;
-        $this->body = $body;
+        if ($request) {
+            $this->headers = $request->header();
+            $this->body = $request->getContent();
+        } else {
+            $this->headers = $headers;
+            $this->body = $body;
+        }
 
         $this->onQueue('alerts');
     }
@@ -39,7 +45,7 @@ class ProcessAlert implements ShouldQueue
     {
         Pipeline::set('headers', $this->headers)
                 ->set('body', $this->body)
-                ->onPipeline(ProcessAlertPipeline::class)
+                ->onPipeline(ParseAlert::class)
                 ->execute();
     }
 }
